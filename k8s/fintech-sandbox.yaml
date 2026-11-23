@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lagospay-sandbox
+  labels:
+    compliance-scope: ndpa-2023
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lagospay-payment-api
+  namespace: lagospay-sandbox
+  labels:
+    app: lagospay-payment-api
+    data-classification: bvn-nin-pii
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lagospay-payment-api
+  template:
+    metadata:
+      labels:
+        app: lagospay-payment-api
+    spec:
+      containers:
+        - name: payment-worker
+          image: python:3.12-slim
+          command:
+            - python3
+            - -c
+            - |
+              import socket, time
+              while True:
+                  for ip in ["8.8.8.8", "1.1.1.1"]:
+                      try:
+                          socket.create_connection((ip, 443), timeout=1).close()
+                      except Exception:
+                          pass
+                  time.sleep(5)
+          securityContext:
+            privileged: true
+            runAsNonRoot: false

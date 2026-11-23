@@ -1,0 +1,16 @@
+services:
+  domestic-settlement-db:
+    image: alpine:3.20
+    container_name: lagospay-domestic-db
+    command: ["sh", "-c", "nc -lk -p 5432 -e /bin/true"]
+
+  lagospay-api-worker:
+    build: ./simulator
+    container_name: lagospay-payment-worker
+    depends_on:
+      - domestic-settlement-db
+    environment:
+      - DOMESTIC_CORE_HOST=domestic-settlement-db
+    labels:
+      com.tracetrust.service: "lagospay-core"
+      com.tracetrust.data-class: "BVN_NIN_PII"
