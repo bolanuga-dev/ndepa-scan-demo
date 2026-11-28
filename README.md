@@ -1,13 +1,14 @@
-# ndepa-scan Mock Fintech Sandbox (`v1.2.9`)
+# LagosPay Sandbox (`ndepa-scan-demo`)
 
-Zero-risk testbed simulating a Nigerian fintech payment service (`LagosPay`) handling BVN/NIN data with both compliant domestic database calls and unauthorized cross-border egress.
+Mock fintech workload for validating [`ndepa-scan`](https://github.com/bolanuga-dev/ndepa-scan) (`v1.2.9+`) static Kubernetes policy evaluation and dynamic eBPF runtime egress monitoring under the Nigeria Data Protection Act (NDPA).
 
----
+## Repository Contents
 
-## Option 1: Single-Node Docker Compose Setup (60 Seconds)
-
-### 1. Start the Sandbox
-```bash
-git clone https://github.com/bolanuga-dev/ndepa-scan-demo.git
-cd ndepa-scan-demo
-docker compose up -d --build
+```text
+ndepa-scan-demo/
+├── docker-compose.yml          # Optional single-host Docker Compose deployment
+├── k8s/
+│   └── fintech-sandbox.yaml    # Kubernetes Namespace + Deployment (lagospay-sandbox)
+└── simulator/
+    ├── Dockerfile              # python:3.12-slim container image definition
+    └── egress_worker.py        # Simulates outbound TCP/443 connections every 5s
